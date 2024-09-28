@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +9,17 @@
 <body>
     <div class="container">
         <h1>Ma Liste de Tâches</h1>
-        <input type="text" id="task-input" placeholder="Entrez une tâche" required>
-        <input type="date" id="task-date" required>
-        <button id="add-task-btn">Ajouter tâche</button>
+        
+        <form id="task-form">
+            <input type="text" id="task-name" placeholder="Saisir une tâche" required>
+            <input type="date" id="task-date" required>
+            <button type="submit">Ajouter tâche</button>
+        </form>
+
+        <h2>Tâches</h2>
+        <ul id="task-list"></ul>
     </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>

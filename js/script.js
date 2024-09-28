@@ -1,32 +1,66 @@
-document.getElementById('add-task-btn').addEventListener('click', function() {
-    const taskInput = document.getElementById('task-input').value;
+document.addEventListener('DOMContentLoaded', loadTasks);
+
+document.getElementById('task-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Récupération des valeurs de la tâche et de la date
+    const taskName = document.getElementById('task-name').value;
     const taskDate = document.getElementById('task-date').value;
 
-    // Vérification si les champs sont vides
-    if (taskInput === "" || taskDate === "") {
-        alert('Veuillez entrer une tâche et une date.');
-        return;
-    }
-
-    // Création de l'objet tâche avec la tâche et la date
+    // Création de l'objet tâche
     const task = {
-        name: taskInput,
+        name: taskName,
         date: taskDate
     };
 
-    // Récupération des tâches depuis le localStorage
+    // Ajout de la tâche dans localStorage
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-    // Ajout de la nouvelle tâche
     tasks.push(task);
-
-    // Enregistrement dans le localStorage
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
-    // Alerte de confirmation
-    alert('Tâche enregistrée avec succès !');
+    // Message de confirmation
+    alert('Tâche ajoutée avec succès !');
 
-    // Vider les champs de saisie
-    document.getElementById('task-input').value = '';
-    document.getElementById('task-date').value = '';
+    // Réinitialiser le formulaire
+    document.getElementById('task-form').reset();
+
+    // Recharger la liste
+    loadTasks();
 });
+
+function loadTasks() {
+    const taskList = document.getElementById('task-list');
+    taskList.innerHTML = ''; // Efface la liste
+
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${task.name} - ${task.date}</span>
+            <button onclick="deleteTask(${index})">Supprimer</button>
+            <button onclick="editTask(${index})">Modifier</button>
+        `;
+        taskList.appendChild(li);
+    });
+}
+
+function deleteTask(index) {
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    tasks.splice(index, 1);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    loadTasks();
+}
+
+function editTask(index) {
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const task = tasks[index];
+
+    // Remplir le formulaire avec les valeurs de la tâche à modifier
+    document.getElementById('task-name').value = task.name;
+    document.getElementById('task-date').value = task.date;
+
+    // Supprimer la tâche ancienne
+    tasks.splice(index, 1);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
